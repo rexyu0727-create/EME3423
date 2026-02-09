@@ -3,22 +3,21 @@ import numpy as np
 capture = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 while  True:
     _ , img = capture.read()
+    img = cv2.resize(img,(int(img.shape[1]/2),int(img.shape[0]/2)))
 
-    img2 = img
     img1 = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)              #COLOR cord
-    imgCanny = cv2.Canny(img,100,100)                         #Size
+    img2 = cv2.flip(img,0)
+    img3 = cv2.flip(img, 1)
+    img4 = cv2.flip(img, -1)
 
-    kernel = np.ones((5,5), np.uint8)
-    imgDilation = cv2.dilate(imgCanny, kernel, iterations=1)  #
-    cv2.imshow("img",img2)
-    cv2.imshow("webcam", img)                        #img
-    cv2.imshow("img2", img1)
-    cv2.imshow("imgCanny", imgCanny)                 #imgCanny
-    if cv2.waitKey(20) & 0xff == ord('q'):                    #butten
+    Hori = np.concatenate((img1, img3),axis=1)
+    Hori2 = np.concatenate((img2,img4),axis=1)
+    Verti = np.concatenate((Hori,Hori2),axis=0)
+
+    cv2.imshow("frame", Verti)
+
+    if cv2.waitKey(1) & 0xff == ord('q'):
         break
 
 capture.release()
 cv2.destroyAllWindows()
-
-#Today learn how to relly using Python
